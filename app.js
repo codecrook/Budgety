@@ -3,12 +3,40 @@
 
     //------------------------------MODEL------------------------------//
     const budgetModel = (() => {
+
+        const budgetData = {
+            allItems: {
+                expenses: [],
+                income: [],
+            },
+            totals: {
+                expenses: 0,
+                income: 0
+            }
+        }
+
+        class Expense{
+            constructor(id, description, value) {
+                this.id = id;
+                this.description = description;
+                this.value = value;
+            }
+        };
+
+        class Income{
+            constructor(id, description, value) {
+                this.id = id;
+                this.description = description;
+                this.value = value;
+            }
+        };
         
     })();
 
 
     //------------------------------VIEW------------------------------//
     const budgetView = (() => {
+
         const DOMStrings = {
             inputType: '.add__type',
             inputDecription: '.add__description',
