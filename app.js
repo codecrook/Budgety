@@ -1,14 +1,14 @@
 {
     'use strict';
 
-    //MODEL
-    let budgetModel = (() => {
+    //------------------------------MODEL------------------------------//
+    const budgetModel = (() => {
         
     })();
 
 
-    //VIEW
-    let budgetView = (() => {
+    //------------------------------VIEW------------------------------//
+    const budgetView = (() => {
         const DOMStrings = {
             inputType: '.add__type',
             inputDecription: '.add__description',
@@ -31,14 +31,10 @@
     })();
 
 
-    //CONTROLLER
-    let controller = ((budMod, budVw) => {
+    //------------------------------CONTROLLER------------------------------//
+    const budgetController = ((budMod, budVw) => {
 
-        const controllerDOMStrings = budVw.getDOMStrings();
-        const addButton = document.querySelector(controllerDOMStrings.inputBtn);
-
-
-        let ctrlAddItem = () => {
+        const ctrlAddItem = () => {
             //1. Get the field input data
             const input = budVw.getInput();
             console.log(input);
@@ -50,11 +46,28 @@
  
             //5. Display the budget on the UI
         };
+
+        //function to setup EventListeners
+        const setupEventListeners = () => {
+            const controllerDOMStrings = budVw.getDOMStrings();
+            const addButton = document.querySelector(controllerDOMStrings.inputBtn);
+            
+            addButton.addEventListener('click', ctrlAddItem);
+            document.addEventListener('keypress', (e) => {
+                if (e.keyCode === 13 || e.which === 13) addButton.click();
+            });
+        };
+
         
-        addButton.addEventListener('click', ctrlAddItem);
-        document.addEventListener('keypress', (e) => {
-            if (e.keyCode === 13 || e.which === 13) addButton.click(); 
-        });
+        return {
+            init() {
+                console.log('application started!');
+                setupEventListeners();
+            }
+        }
 
     })(budgetModel, budgetView);
+
+    budgetController.init();
+
 }
