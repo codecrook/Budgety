@@ -4,14 +4,14 @@
     //------------------------------MODEL------------------------------//
     const budgetModel = (() => {
 
-        const budgetData = {
+        const data = {
             allItems: {
-                expenses: [],
-                income: [],
+                exp: [],
+                inc: [],
             },
             totals: {
-                expenses: 0,
-                income: 0
+                exp: 0,
+                inc: 0
             }
         }
 
@@ -28,6 +28,37 @@
                 this.id = id;
                 this.description = description;
                 this.value = value;
+            }
+        };
+
+        return {
+            addItem(type, desc, val) {
+                let newItem, ID;
+
+                //create new ID
+                if (data.allItems[type].length > 0) {
+                    ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
+                } else {
+                    ID = 0;
+                }
+
+                //create new item based on 'exp' or 'inc'
+                if (type === 'exp') {
+                    newItem = new Expense(ID, desc, val);
+                } else if (type === 'inc') {
+                    newItem = new Income(ID, desc, val);
+                }
+
+                //add the item to our data structure
+
+                //return the new item
+                data.allItems[type].push(newItem);
+                return newItem;
+            },
+
+            //just a testing function--to be deleted at project complletion
+            testing() {
+                console.log(data);
             }
         };
         
@@ -65,9 +96,11 @@
         const ctrlAddItem = () => {
             //1. Get the field input data
             const input = budVw.getInput();
-            console.log(input);
+            console.log(input);//test code
+
             //2. Add the data to budgetModel
- 
+            let newItem = budMod.addItem(input.type, input.description, input.value);
+            budMod.testing();//testing if the data is added in data structure or not
             //3. Add the item to the UI
  
             //4. Calculate the budget
