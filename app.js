@@ -12,7 +12,9 @@
             totals: {
                 exp: 0,
                 inc: 0
-            }
+            },
+            budget: 0,
+            percentage: -1
         }
 
         class Expense{
@@ -31,6 +33,15 @@
             }
         };
 
+        const calculateToatal = (type) => {
+            let sum = 0;
+
+            data.allItems[type].forEach((cur) => {
+                sum += cur.value;
+            });
+
+            data.totals[type] = sum;
+        }
         return {
             addItem(type, desc, val) {
                 let newItem, ID;
@@ -54,6 +65,29 @@
                 
                 //return the new item
                 return newItem;
+            },
+            calculateBudget() {
+                //Calculate total income and expenses
+                calculateToatal('inc');
+                calculateToatal('exp');
+
+                //Calculate the Budget: income - expense
+                data.budget = data.totals.inc - data.totals.exp;
+
+                //Calculate the percentage of income spent
+                if (data.totals.inc > 0) {
+                    data.percentage = Math.round((data.totals.exp / data.totals.inc) * 100); 
+                } else {
+                    data.percentage = -1;
+                }
+            },
+            getBudget() {
+                return {
+                    budget: data.budget,
+                    totalInc: data.totals.inc,
+                    totalExp: data.totals.exp,
+                    percentage: data.percentage
+                };
             },
 
             //just a testing function--to be deleted at project complletion
@@ -82,7 +116,7 @@
                 return {
                     type: document.querySelector(DOMStrings.inputType).value,
                     description: document.querySelector(DOMStrings.inputDecription).value,
-                    value: document.querySelector(DOMStrings.inputValue).value
+                    value: parseFloat(document.querySelector(DOMStrings.inputValue).value)
                 };
             },
             addListItem(obj, type) {
@@ -144,21 +178,36 @@
     //------------------------------CONTROLLER------------------------------//
     const budgetController = ((budMod, budVw) => {
 
+        const updateBudget = () => {
+            //1. Calculate the budget
+            budMod.calculateBudget();
+
+            //2. Return the budget
+            const budget = budMod.getBudget();
+
+            //3. Display the budget on the UI
+            console.log(budget); //testing
+        }
+
         const ctrlAddItem = () => {
             //1. Get the field input data
             const input = budVw.getInput();
             console.log(input);//test code
 
-            //2. Add the data to budgetModel
-            let newItem = budMod.addItem(input.type, input.description, input.value);
-            budMod.testing();//testing if the data is added in data structure or not
-            //3. Add the item to the UI
-            budVw.addListItem(newItem, input.type);
-            //4. Clear the nput fields
-            budVw.clearFields();
-            //4. Calculate the budget
- 
-            //5. Display the budget on the UI
+            if (input.description !== '' && !isNaN(input.value) && input.value > 0) {
+                //2. Add the data to budgetModel
+                let newItem = budMod.addItem(input.type, input.description, input.value);
+                budMod.testing();//testing if the data is added in data structure or not
+
+                //3. Add the item to the UI
+                budVw.addListItem(newItem, input.type);
+
+                //4. Clear the nput fields
+                budVw.clearFields();
+
+                //5. Calculate and update the budget
+                updateBudget();
+            }
         };
 
         //function to setup EventListeners
