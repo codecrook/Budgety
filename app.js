@@ -123,6 +123,17 @@
                 //Insert HTML into the DOM
                 document.querySelector(container).insertAdjacentHTML('beforeend', newHTML);
             },
+            clearFields() {
+                //Select all the input fields
+                const inputFields = document.querySelectorAll(`${DOMStrings.inputDecription}, ${DOMStrings.inputValue}`);
+                //Convert the NodeList returned by querySelectorAll to an array
+                const inputFieldsArray = Array.from(inputFields);
+
+                //Set the value of all input fields to blank i.e clear the input fields
+                inputFieldsArray.forEach((current, index, array) => current.value = '');
+                //Set the focus back to the first input field i.e the Description field
+                inputFieldsArray[0].focus();
+            },
             getDOMStrings() {
                 return DOMStrings;
             }
@@ -143,6 +154,8 @@
             budMod.testing();//testing if the data is added in data structure or not
             //3. Add the item to the UI
             budVw.addListItem(newItem, input.type);
+            //4. Clear the nput fields
+            budVw.clearFields();
             //4. Calculate the budget
  
             //5. Display the budget on the UI
